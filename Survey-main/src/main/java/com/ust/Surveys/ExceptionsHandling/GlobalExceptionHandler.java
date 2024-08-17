@@ -14,6 +14,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(ex.getMessage());
         //return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+    @ExceptionHandler(SetNameNotFoundException.class)
+    public ResponseEntity<String> handleSetNameNotFoundException(SetNameNotFoundException ex) {
+
+        String message =  " "+ ex.getMessage();
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
     @ExceptionHandler(SurveyNotFoundException.class)
     public ResponseEntity<String> handleSurveyNotFoundException(SurveyNotFoundException ex) {
 

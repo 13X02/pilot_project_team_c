@@ -1,6 +1,7 @@
 package com.ust.Surveys.service;
 
 import com.ust.Surveys.ExceptionsHandling.QuestionNotFoundException;
+import com.ust.Surveys.ExceptionsHandling.SetNameNotFoundException;
 import com.ust.Surveys.ExceptionsHandling.SurveyNotFoundException;
 import com.ust.Surveys.client.SurveyFullResponse;
 import com.ust.Surveys.client.ResponseSetDto;
@@ -26,6 +27,8 @@ public class SurveyService {
 
 
     public SurveyFullResponse MapQuestions(Survey survey) {
+
+        survey.setStatus("PENDING");
         List<Integer> ques=survey.getQuestionIds();
         // Check if survey is null
         if (survey == null) {
@@ -34,9 +37,18 @@ public class SurveyService {
         //survey.setQuestionIds(ques);
         // Save the survey to the repository
         Survey survey1 = survey;
+        ResponseSetDto setInfos = null;
 
         // Fetch assessment set info from the client
-        ResponseSetDto setInfos = assessmentClient.getAssessmentBySetName(survey1.getSetName());
+        try {
+            setInfos = assessmentClient.getAssessmentBySetName(survey1.getSetName());
+        }  catch (Exception e) {
+            // Handle generic exception here
+            // Optionally, rethrow or handle the exception as needed
+            throw new SetNameNotFoundException(survey1.getSetName());
+        }
+
+
         if (setInfos == null) {
             throw new SurveyNotFoundException("Assessment set not found for setName: " + survey1.getSetName());
         }
@@ -53,10 +65,21 @@ public class SurveyService {
         List<SurveyQuestion> questions = new ArrayList<>();
         List<SurveyQuestion> questionlist = setInfos.getQuestions();
 
+        List<Integer> questionIdList = new ArrayList<>();
         if (questionlist == null) {
             throw new SurveyNotFoundException("No questions found for the assessment set");
         }
+        if(ques.size()==0){
+            questions = questionlist;
+            for(SurveyQuestion surveyQuestion : setInfos.getQuestions()){
 
+                questionIdList.add(surveyQuestion.getQuestionId());
+
+
+            }
+            survey.setQuestionIds(questionIdList);
+
+        } else{
         for (Integer questionId : ques) {
             Optional<SurveyQuestion> questionOpt = questionlist.stream()
                     .filter(question -> question.getQuestionId().equals(questionId))
@@ -67,7 +90,7 @@ public class SurveyService {
             }
 
             questions.add(questionOpt.get());
-        }
+        }}
 
         // Set the questions and return the response
         setInfos.setQuestions(questions);

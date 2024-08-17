@@ -32,7 +32,7 @@ public class AssessmentController {
     public ResponseEntity<ResponseSetDto> createAssessment(@RequestBody RequestSetDto fullResponse) {
         return new ResponseEntity<>(assessmentService.saveSetInfo(fullResponse), HttpStatus.CREATED);
     }
-    @GetMapping("/{setId}")
+    @GetMapping("setId/{setId}")
     public ResponseEntity<List<Question>> getAssessmentBySetName(@PathVariable Integer setId) {
         return ResponseEntity.ok(assessmentService.getSetBySetName(setId));
     }
@@ -48,7 +48,7 @@ public class AssessmentController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("findBySetName/{setName}")
+    @GetMapping("/{setName}")
     public ResponseEntity<ResponseSetDto> getAssessmentBySetId(@PathVariable String setName) {
         return ResponseEntity.ok(assessmentService.getSetBySetId(setName));
     }

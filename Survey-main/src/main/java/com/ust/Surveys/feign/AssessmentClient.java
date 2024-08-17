@@ -13,6 +13,6 @@ public interface AssessmentClient {
 //@GetMapping("/{setname}")
 // List<SurveySetInfo> getAssessmentBySetName(@PathVariable String setname);
 
- @GetMapping("findBySetName/{setname}")
+ @GetMapping("/{setname}")
  ResponseSetDto getAssessmentBySetName(@PathVariable String setname);
 }

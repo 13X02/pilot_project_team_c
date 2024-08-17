@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
         String message = " " + ex.getMessage();
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
+    @ExceptionHandler(SetNameExist.class)
+    public ResponseEntity<String> handleSetNameExistException(SetNameExist ex) {
+
+        String message = " " + ex.getMessage();
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
     @ExceptionHandler(QuestionIdNotFoundException.class)
     public ResponseEntity<String> handleQuestionIdNotFoundException(QuestionIdNotFoundException ex) {
 

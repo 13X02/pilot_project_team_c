@@ -22,6 +22,8 @@ public class SetInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer setId;
+
+    @Column(unique = true)
     private String setName;
 
     private String createdBy;

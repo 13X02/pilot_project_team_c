@@ -1,6 +1,7 @@
 package com.example.assessment.service;
 
 import com.example.assessment.dto.*;
+import com.example.assessment.exception.SetNameExist;
 import com.example.assessment.repository.AnswerRepository;
 import com.example.assessment.repository.QuestionRepository;
 import com.example.assessment.repository.SetInfoRepository;
@@ -96,6 +97,11 @@ public class AssessmentService {
         }
     }
     public ResponseSetDto saveSetInfo(RequestSetDto setDto) {
+
+        Optional<SetInfo> seti = setInfoRepository.findBySetName(setDto.getSetName());
+        if (seti.isPresent()) {
+            throw new SetNameExist(setDto.getSetName());
+        }
         SetInfo setInfo =new SetInfo();
         setInfo.setSetName(setDto.getSetName());
         setInfo.setCreatedBy("Admin");
